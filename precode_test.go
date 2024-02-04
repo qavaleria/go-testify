@@ -44,7 +44,7 @@ func TestMainHandlerWhenMissingCount(t *testing.T) {
 	handler := http.HandlerFunc(mainHandle)
 	handler.ServeHTTP(responseRecorder, req)
 
-	require.Equal(t, responseRecorder.Code, http.StatusBadRequest, "wrong city value")
+	require.Equal(t, responseRecorder.Code, http.StatusBadRequest, "wrong count value")
 
 	expected := `count missing`
 	require.Equal(t, responseRecorder.Body.String(), expected)
