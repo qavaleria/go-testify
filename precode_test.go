@@ -28,13 +28,17 @@ func TestMainHandlerWhenCountMoreThanTotal(t *testing.T) {
 
 func TestMainHandlerWhenOk(t *testing.T) {
 	req := httptest.NewRequest("GET", "/cafe?count=2&city=moscow", nil)
-
+	totalCount := 2
 	responseRecorder := httptest.NewRecorder()
 	handler := http.HandlerFunc(mainHandle)
 	handler.ServeHTTP(responseRecorder, req)
 
+	body := responseRecorder.Body.String()
+	list := strings.Split(body, ",")
+
 	require.Equal(t, responseRecorder.Code, http.StatusOK)
 	require.NotEmpty(t, responseRecorder)
+	assert.Len(t, list, totalCount)
 }
 
 func TestMainHandlerWhenMissingCount(t *testing.T) {
@@ -48,4 +52,7 @@ func TestMainHandlerWhenMissingCount(t *testing.T) {
 
 	expected := `count missing`
 	require.Equal(t, responseRecorder.Body.String(), expected)
+
+	totalCity := `omsk`
+	require.NotEqual(t, req.URL.Query().Get("city"), totalCity, "wrong city value")
 }
