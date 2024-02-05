@@ -52,7 +52,17 @@ func TestMainHandlerWhenMissingCount(t *testing.T) {
 
 	expected := `count missing`
 	require.Equal(t, responseRecorder.Body.String(), expected)
+}
 
-	totalCity := `omsk`
-	require.NotEqual(t, req.URL.Query().Get("city"), totalCity, "wrong city value")
+func TestMainHandlerWhenCityWrong(t *testing.T) {
+	req := httptest.NewRequest("GET", "/cafe?count=4&city=omsk", nil)
+
+	responseRecorder := httptest.NewRecorder()
+	handler := http.HandlerFunc(mainHandle)
+	handler.ServeHTTP(responseRecorder, req)
+
+	require.Equal(t, responseRecorder.Code, http.StatusBadRequest, "wrong city value")
+
+	expected := `wrong city value`
+	require.Equal(t, responseRecorder.Body.String(), expected)
 }
